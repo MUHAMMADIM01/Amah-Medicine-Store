@@ -1,0 +1,152 @@
+:root{
+  --blue-1:#014f86;
+  --blue-2:#007bff;
+  --muted:#f2f8ff;
+  --accent:#00c6ff;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg,#f8fcff,#eef6ff);
+  color:#0b243b;
+  text-align:center;
+}
+
+/* header */
+.site-header{
+  background:var(--blue-1);
+  color:white;
+  padding:16px 12px;
+}
+.logo-wrap{ display:flex; align-items:center; justify-content:center; gap:12px; }
+.site-logo{ width:68px; height:auto; border-radius:8px; }
+.site-title h1{ margin:0; font-size:20px; }
+.tagline{ margin:2px 0 0; font-size:13px; color:#e6f2ff; }
+
+/* nav */
+.main-nav{ margin:12px 0; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+.main-nav a{ color:white; text-decoration:none; font-weight:600; padding:8px 10px; border-radius:6px; background:transparent; }
+.main-nav a:hover{ background:var(--blue-2); }
+
+/* main cards */
+.center{ max-width:900px; margin:0 auto; }
+.hero-card{ max-width:720px; margin:22px auto; background:white; padding:22px; border-radius:12px; box-shadow:0 10px 30px rgba(9,30,66,0.06); }
+.content{ padding:20px 12px; }
+
+/* services */
+.services-list{ list-style:none; padding:0; margin:10px auto; text-align:left; display:inline-block; max-width:700px; }
+.services-list li{ padding:8px 10px; font-size:18px; }
+
+/* tips */
+.tips-box{ max-width:720px; margin:12px auto; background:#e6fff0; border-radius:8px; padding:14px; box-shadow:0 4px 18px rgba(3,76,47,0.06); font-style:italic; }
+
+/* contact */
+.contact-section{ background: linear-gradient(90deg,var(--blue-2),var(--blue-1)); color:white; padding:26px 12px; margin-top:16px; }
+.contact-buttons{ margin-top:12px; }
+.btn{ display:inline-block; background:var(--blue-2); color:white; padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:700; margin:6px; border:none; cursor:pointer; }
+.whatsapp{ background:#25D366; } .call{ background:#0b5ed7; } .email{ background:#ff9800; }
+
+/* footer */
+footer{ padding:14px 8px; background:#022f55; color:#fff; margin-top:22px; }
+
+/* admin/login */
+.center-screen{ max-width:920px; margin:28px auto; padding:10px; }
+.card{ background:white; border-radius:12px; padding:18px; box-shadow:0 10px 30px rgba(8,30,66,0.08); margin:20px; }
+.small-card{ max-width:420px; margin:80px auto; padding:22px; }
+
+/* inputs */
+input[type="text"], input[type="password"], textarea{
+  width:92%; padding:10px; border-radius:8px; border:1px solid #d0d7df; margin-top:8px; font-size:15px;
+}
+
+/* admin-list */
+.admin-list{ text-align:left; list-style:decimal; padding-left:18px; margin:8px auto; max-width:700px; }
+.admin-list li{ margin:8px 0; cursor:pointer; }
+
+/* ghost/secondary */
+.btn-ghost{ background:transparent; color:var(--blue-2); border:1px solid var(--blue-2); padding:8px 12px; border-radius:8px; }
+
+/* responsive */
+@media (max-width:640px){
+  .site-logo{ width:56px; }
+  .hero-card{ padding:16px; }
+  .services-list{ width:100%; text-align:left; }
+}
+:root{
+  --blue-1:#014f86;
+  --blue-2:#007bff;
+  --muted:#f2f8ff;
+  --accent:#00c6ff;
+}
+
+*{box-sizing:border-box}
+body{
+  font-family: "Segoe UI", Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg,#f8fcff,#eef6ff);
+  color:#0b243b;
+  text-align:center;
+}
+
+/* header */
+.site-header{
+  background:var(--blue-1);
+  color:white;
+  padding:16px 12px;
+}
+.logo-wrap{ display:flex; align-items:center; justify-content:center; gap:12px; }
+.site-logo{ width:68px; height:auto; border-radius:8px; }
+.site-title h1{ margin:0; font-size:20px; }
+.tagline{ margin:2px 0 0; font-size:13px; color:#e6f2ff; }
+
+/* nav */
+.main-nav{ margin:12px 0; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; }
+.main-nav a{ color:white; text-decoration:none; font-weight:600; padding:8px 10px; border-radius:6px; background:transparent; }
+.main-nav a:hover{ background:var(--blue-2); }
+
+/* main cards */
+.center{ max-width:900px; margin:0 auto; }
+.hero-card{ max-width:720px; margin:22px auto; background:white; padding:22px; border-radius:12px; box-shadow:0 10px 30px rgba(9,30,66,0.06); }
+.content{ padding:20px 12px; }
+
+/* services */
+.services-list{ list-style:none; padding:0; margin:10px auto; text-align:left; display:inline-block; max-width:700px; }
+.services-list li{ padding:8px 10px; font-size:18px; }
+
+/* tips */
+.tips-box{ max-width:720px; margin:12px auto; background:#e6fff0; border-radius:8px; padding:14px; box-shadow:0 4px 18px rgba(3,76,47,0.06); font-style:italic; }
+
+/* contact */
+.contact-section{ background: linear-gradient(90deg,var(--blue-2),var(--blue-1)); color:white; padding:26px 12px; margin-top:16px; }
+.contact-buttons{ margin-top:12px; }
+.btn{ display:inline-block; background:var(--blue-2); color:white; padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:700; margin:6px; border:none; cursor:pointer; }
+.whatsapp{ background:#25D366; } .call{ background:#0b5ed7; } .email{ background:#ff9800; }
+
+/* footer */
+footer{ padding:14px 8px; background:#022f55; color:#fff; margin-top:22px; }
+
+/* admin/login */
+.center-screen{ max-width:920px; margin:28px auto; padding:10px; }
+.card{ background:white; border-radius:12px; padding:18px; box-shadow:0 10px 30px rgba(8,30,66,0.08); margin:20px; }
+.small-card{ max-width:420px; margin:80px auto; padding:22px; }
+
+/* inputs */
+input[type="text"], input[type="password"], textarea{
+  width:92%; padding:10px; border-radius:8px; border:1px solid #d0d7df; margin-top:8px; font-size:15px;
+}
+
+/* admin-list */
+.admin-list{ text-align:left; list-style:decimal; padding-left:18px; margin:8px auto; max-width:700px; }
+.admin-list li{ margin:8px 0; cursor:pointer; }
+
+/* ghost/secondary */
+.btn-ghost{ background:transparent; color:var(--blue-2); border:1px solid var(--blue-2); padding:8px 12px; border-radius:8px; }
+
+/* responsive */
+@media (max-width:640px){
+  .site-logo{ width:56px; }
+  .hero-card{ padding:16px; }
+  .services-list{ width:100%; text-align:left; }
+}

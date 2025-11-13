@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: #0078D7;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  section {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  input, textarea, button, select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+  }
+  button {
+    background: #0078D7;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #005fa3;
+  }
+  img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  .list {
+    margin-top: 10px;
+  }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f2f2f2;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+  }
+  .item span {
+    flex: 1;
+    margin-left: 10px;
+  }
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #0078D7;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h2>Admin Dashboard</h2>
+  <button onclick="logout()">Logout</button>
+</header>
+
+<section>
+  <h3>Add / Edit Medicine</h3>
+  <input type="text" id="medName" placeholder="Medicine Name">
+  <textarea id="medDesc" placeholder="Description"></textarea>
+  <input type="number" id="medPrice" placeholder="Price ₦">
+  <input type="file" id="medImage" accept="image/*">
+  <button onclick="addMedicine()">Save Medicine</button>
+
+  <div class="list" id="medList"></div>
+</section>
+
+<section>
+  <h3>Add / Edit Health Tip</h3>
+  <input type="text" id="tipTitle" placeholder="Tip Title">
+  <textarea id="tipText" placeholder="Health Tip"></textarea>
+  <button onclick="addTip()">Save Tip</button>
+
+  <div class="list" id="tipList"></div>
+</section>
+
+<section>
+  <h3>Backup & Restore</h3>
+  <button onclick="backupData()">Download Backup</button>
+  <input type="file" id="restoreFile" accept=".json" onchange="restoreData(event)">
+</section>
+
+<section>
+  <h3>Change Password</h3>
+  <input type="password" id="oldPass" placeholder="Old Password">
+  <input type="password" id="newPass" placeholder="New Password">
+  <button onclick="changePassword()">Update Password</button>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== SECURITY CHECK =====
+if (localStorage.getItem("isLoggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+
+// ===== SHOW TOAST =====
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 2000);
+}
+
+// ===== LOGOUT =====
+function logout() {
+  localStorage.setItem("isLoggedIn", "false");
+  window.location.href = "login.html";
+}
+
+// ===== MEDICINE HANDLER =====
+let editMedIndex = null;
+
+function addMedicine() {
+  const name = document.getElementById("medName").value.trim();
+  const desc = document.getElementById("medDesc").value.trim();
+  const price = document.getElementById("medPrice").value.trim();
+  const file = document.getElementById("medImage").files[0];
+
+  if (!name || !desc || !price) {
+    alert("Please fill all fields!");
+    return;
+  }
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      saveMedicineData(name, desc, price, e.target.result);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    saveMedicineData(name, desc, price, "");
+  }
+}
+
+function saveMedicineData(name, desc, price, image) {
+  let meds = JSON.parse(localStorage.getItem("medicines") || "[]");
+  if (editMedIndex !== null) {
+    meds[editMedIndex] = { name, desc, price, image };
+    editMedIndex = null;
+    showToast("Medicine updated!");
+  } else {
+    meds.push({ name, desc, price, image });
+    showToast("Medicine added!");
+  }
+  localStorage.setItem("medicines", JSON.stringify(meds));
+  displayMedicines();
+  syncToIndex();
+}
+
+function displayMedicines() {
+  const meds = JSON.parse(localStorage.getItem("medicines") || "[]");
+  const list = document.getElementById("medList");
+  list.innerHTML = "";
+  meds.forEach((m, i) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <img src="${m.image || ''}" alt="">
+      <span><b>${m.name}</b><br>₦${m.price}<br>${m.desc}</span>
+      <button onclick="editMedicine(${i})">✏️</button>
+      <button onclick="deleteMedicine(${i})">🗑️</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function editMedicine(i) {
+  const meds = JSON.parse(localStorage.getItem("medicines"));
+  const m = meds[i];
+  document.getElementById("medName").value = m.name;
+  document.getElementById("medDesc").value = m.desc;
+  document.getElementById("medPrice").value = m.price;
+  editMedIndex = i;
+}
+
+function deleteMedicine(i) {
+  const meds = JSON.parse(localStorage.getItem("medicines"));
+  meds.splice(i, 1);
+  localStorage.setItem("medicines", JSON.stringify(meds));
+  displayMedicines();
+  syncToIndex();
+  showToast("Medicine deleted!");
+}
+
+// ===== HEALTH TIPS =====
+let editTipIndex = null;
+
+function addTip() {
+  const title = document.getElementById("tipTitle").value.trim();
+  const text = document.getElementById("tipText").value.trim();
+
+  if (!title || !text) {
+    alert("Fill all fields!");
+    return;
+  }
+
+  let tips = JSON.parse(localStorage.getItem("healthTips") || "[]");
+  if (editTipIndex !== null) {
+    tips[editTipIndex] = { title, text };
+    editTipIndex = null;
+    showToast("Tip updated!");
+  } else {
+    tips.push({ title, text });
+    showToast("Tip added!");
+  }
+  localStorage.setItem("healthTips", JSON.stringify(tips));
+  displayTips();
+  syncToIndex();
+}
+
+function displayTips() {
+  const tips = JSON.parse(localStorage.getItem("healthTips") || "[]");
+  const list = document.getElementById("tipList");
+  list.innerHTML = "";
+  tips.forEach((t, i) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <span><b>${t.title}</b><br>${t.text}</span>
+      <button onclick="editTip(${i})">✏️</button>
+      <button onclick="deleteTip(${i})">🗑️</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function editTip(i) {
+  const tips = JSON.parse(localStorage.getItem("healthTips"));
+  const t = tips[i];
+  document.getElementById("tipTitle").value = t.title;
+  document.getElementById("tipText").value = t.text;
+  editTipIndex = i;
+}
+
+function deleteTip(i) {
+  const tips = JSON.parse(localStorage.getItem("healthTips"));
+  tips.splice(i, 1);
+  localStorage.setItem("healthTips", JSON.stringify(tips));
+  displayTips();
+  syncToIndex();
+  showToast("Tip deleted!");
+}
+
+// ===== BACKUP / RESTORE =====
+function backupData() {
+  const data = {
+    medicines: JSON.parse(localStorage.getItem("medicines") || "[]"),
+    healthTips: JSON.parse(localStorage.getItem("healthTips") || "[]")
+  };
+  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "backup_data.json";
+  link.click();
+}
+
+function restoreData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const data = JSON.parse(ev.target.result);
+    localStorage.setItem("medicines", JSON.stringify(data.medicines || []));
+    localStorage.setItem("healthTips", JSON.stringify(data.healthTips || []));
+    displayMedicines();
+    displayTips();
+    syncToIndex();
+    showToast("Backup restored!");
+  };
+  reader.readAsText(file);
+}
+
+// ===== CHANGE PASSWORD =====
+function changePassword() {
+  const oldPass = document.getElementById("oldPass").value.trim();
+  const newPass = document.getElementById("newPass").value.trim();
+  const savedPass = localStorage.getItem("adminPass") || "Amah123";
+
+  if (oldPass !== savedPass) {
+    alert("Incorrect old password!");
+    return;
+  }
+  if (!newPass) {
+    alert("Enter new password!");
+    return;
+  }
+  localStorage.setItem("adminPass", newPass);
+  alert("Password updated successfully!");
+}
+
+// ===== SYNC TO INDEX =====
+function syncToIndex() {
+  localStorage.setItem("syncTime", Date.now());
+}
+
+window.onload = () => {
+  displayMedicines();
+  displayTips();
+};
+</script>
+</body>
+</html>

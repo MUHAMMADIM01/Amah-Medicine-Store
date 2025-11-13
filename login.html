@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Login - Admin Panel</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(120deg, #4caf50, #2e7d32);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+.container {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  border-radius: 10px;
+  width: 320px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 5px;
+}
+button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #81c784;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:hover { background: #66bb6a; }
+#msg { text-align: center; margin-top: 10px; color: yellow; }
+.link { color: #bbdefb; text-decoration: underline; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Admin Login</h2>
+  <input type="text" id="username" placeholder="Enter Username" required>
+  
+  <div style="position:relative;">
+    <input type="password" id="password" placeholder="Enter Password" required>
+    <span id="togglePass" class="link" style="position:absolute;right:10px;top:10px;font-size:13px;">Show</span>
+  </div>
+
+  <button onclick="login()">Login</button>
+  <div id="msg"></div>
+
+  <p style="text-align:center;margin-top:10px;">
+    <span class="link" onclick="showReset()">Forgot Password?</span>
+  </p>
+
+  <div id="resetBox" style="display:none;">
+    <hr>
+    <h3>Reset Password</h3>
+    <input type="text" id="resetUser" placeholder="Confirm Username">
+    <input type="password" id="newPass" placeholder="Enter New Password">
+    <button onclick="resetPassword()">Reset</button>
+  </div>
+</div>
+
+<script>
+// Default credentials
+const savedUser = localStorage.getItem("adminUser") || "admin";
+const savedPass = localStorage.getItem("adminPass") || "Amah123";
+localStorage.setItem("adminUser", savedUser);
+localStorage.setItem("adminPass", savedPass);
+
+function login() {
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value.trim();
+  const user = localStorage.getItem("adminUser");
+  const pass = localStorage.getItem("adminPass");
+
+  if (u === user && p === pass) {
+    localStorage.setItem("isLoggedIn", "true");
+    document.getElementById("msg").innerText = "Login successful...";
+    setTimeout(() => window.location.href = "dashboard.html", 1000);
+  } else {
+    document.getElementById("msg").innerText = "Incorrect username or password!";
+  }
+}
+
+function showReset() {
+  const box = document.getElementById("resetBox");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+
+function resetPassword() {
+  const ru = document.getElementById("resetUser").value.trim();
+  const np = document.getElementById("newPass").value.trim();
+
+  if (ru === localStorage.getItem("adminUser") && np.length >= 4) {
+    localStorage.setItem("adminPass", np);
+    alert("Password reset successfully!");
+    document.getElementById("resetBox").style.display = "none";
+  } else {
+    alert("Invalid username or weak password.");
+  }
+}
+
+document.getElementById("togglePass").addEventListener("click", () => {
+  const pass = document.getElementById("password");
+  const toggle = document.getElementById("togglePass");
+  if (pass.type === "password") {
+    pass.type = "text";
+    toggle.innerText = "Hide";
+  } else {
+    pass.type = "password";
+    toggle.innerText = "Show";
+  }
+});
+</script>
+
+</body>
+</html>
